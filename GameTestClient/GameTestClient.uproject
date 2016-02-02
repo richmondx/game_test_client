@@ -1,0 +1,16 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{FDDCA6AB-42AC-9580-3529-ADAF255B226F}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "GameTestClient",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		}
+	]
+}
