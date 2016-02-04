@@ -6,7 +6,7 @@ public class GameTestClient : ModuleRules
 {
 	public GameTestClient(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GamePlatformPlugin" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "Slate", "SlateCore","GamePlatformPlugin" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
