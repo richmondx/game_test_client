@@ -18,6 +18,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GamePlatformService")
 	bool DisconnectClient();
 
+	UFUNCTION(BlueprintCallable, Category = "GamePlatformService_Messages")
+	int SendEchoMessage(FString message);
 	UFUNCTION(BlueprintCallable, Category = "GamePlatformService")
 	EClientWorkerStatus GetClientWorkerStatus() {
 		if (clientWorker == nullptr)

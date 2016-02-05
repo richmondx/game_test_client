@@ -1,4 +1,5 @@
 #include "GamePlatformPluginPrivatePCH.h"
+#include "Networking.h"
 #include "ClientWorker.h"
 
 FClientWorker* FClientWorker::runnableWorker = nullptr;
@@ -33,6 +34,16 @@ uint32 FClientWorker::Run() {
 	playerController->SetClientStatus(clientWorkerStatus);
 	while (clientWorkerStatus == EClientWorkerStatus::EC_WORKER_RUNNING) {
 		FPlatformProcess::Sleep(0.03);
+		TArray<uint8> ReceivedData;
+		uint32 Size;
+		while (clientSocket->HasPendingData(Size)) {
+			ReceivedData.SetNumUninitialized(Size);
+			int32 Read = 0;
+			clientSocket->Recv(ReceivedData.GetData(), ReceivedData.Num(), Read);
+			FPlatformClientMessage msg;
+			msg.LoadMessageData(ReceivedData);
+			playerController->ProcessMessage(msg);
+		}
 	}
 	clientWorkerStatus = EClientWorkerStatus::EC_WORKER_INITIALIZED;
 	playerController->SetClientStatus(clientWorkerStatus);

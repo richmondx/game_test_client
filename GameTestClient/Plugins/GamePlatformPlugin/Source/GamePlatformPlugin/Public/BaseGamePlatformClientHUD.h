@@ -5,6 +5,7 @@
 #include "GameFramework/HUD.h"
 #include "ClientWorkerStatus.h"
 #include "Blueprint/UserWidget.h"
+#include "PlatformClientMessage.h"
 #include "BaseGamePlatformClientHUD.generated.h"
 
 /**
@@ -31,4 +32,6 @@ public:
 	void SetIsClientConnected(bool is_connected);
 	UFUNCTION(BlueprintImplementableEvent, Category = "GamePlatformService")
 	void UpdateClientRunStatus(EClientWorkerStatus status);
+	UFUNCTION(BlueprintImplementableEvent, Category = "GamePlatformService")
+	void ProcessPlatformClientMessage(FPlatformClientMessage message);
 };

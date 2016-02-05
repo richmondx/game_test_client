@@ -28,6 +28,7 @@ public:
 		if(platformHud)
 			platformHud->UpdateClientRunStatus(status);
 	}
+	void ProcessMessage(FPlatformClientMessage message);
 
 
 };

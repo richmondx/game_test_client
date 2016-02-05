@@ -1,4 +1,5 @@
 #include "GamePlatformPluginPrivatePCH.h"
+#include "PlatformClientMessage.h"
 #include "GamePlatformClient.h"
 
 bool UGamePlatformClient::ConnectClient(FString address, int32 port, ABaseGamePlatformClientPlayerController* pc) {
@@ -23,7 +24,21 @@ bool UGamePlatformClient::ConnectClient(FString address, int32 port, ABaseGamePl
 	return connection;
 	
 }
+int UGamePlatformClient::SendEchoMessage(FString message) {
+	
+	FPlatformMessageBlock msgBlock;
+	msgBlock.messageData = message;
 
+	FPlatformClientMessage echoMessage;
+	echoMessage.messageHeader = 0x00;
+	echoMessage.messageBlocks.Insert(msgBlock, 0);
+
+
+	int32 sent;
+	TArray<uint8> msg = echoMessage.GetMessageData();
+	platformSocket->Send(msg.GetData(), msg.Num(), sent);
+	return sent;
+}
 bool UGamePlatformClient::DisconnectClient() {
 	if (platformSocket == nullptr) return false;
 	FClientWorker::StopClientWorker();
