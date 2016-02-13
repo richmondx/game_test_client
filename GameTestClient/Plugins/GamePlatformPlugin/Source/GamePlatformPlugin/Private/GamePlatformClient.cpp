@@ -39,6 +39,21 @@ int UGamePlatformClient::SendEchoMessage(FString message) {
 	platformSocket->Send(msg.GetData(), msg.Num(), sent);
 	return sent;
 }
+int UGamePlatformClient::SendAuthenticateMessage(FString username, FString password) {
+	FPlatformMessageBlock userNameBlock;
+	userNameBlock.messageData = username;
+
+	FPlatformMessageBlock passwordBlock;
+	passwordBlock.messageData = password;
+	FPlatformClientMessage authMessage;
+	authMessage.messageHeader = 0x02;
+	authMessage.messageBlocks.Insert(userNameBlock, 0);
+	authMessage.messageBlocks.Insert(passwordBlock, 1);
+	int32 sent;
+	TArray<uint8> msg = authMessage.GetMessageData();
+	platformSocket->Send(msg.GetData(), msg.Num(), sent);
+	return sent;
+}
 bool UGamePlatformClient::DisconnectClient() {
 	if (platformSocket == nullptr) return false;
 	FClientWorker::StopClientWorker();

@@ -26,7 +26,8 @@ public:
 			return EClientWorkerStatus::EC_WORKER_UNINITIALIZED;
 		return clientWorker->GetClientStatus();
 	};
-
+	UFUNCTION(BlueprintCallable, Category = "GamePlatformService_Messages")
+	int SendAuthenticateMessage(FString username, FString password);
 	UFUNCTION(BlueprintCallable, Category = "GamePlatformService")
 	TArray<uint8> GetMessageFromService();
 

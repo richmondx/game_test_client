@@ -9,7 +9,7 @@ struct FPlatformMessageBlock
 	GENERATED_BODY()
 	UPROPERTY(BlueprintReadOnly, Category = "GamePlatformService_Message")
 	FString messageData;
-	void LoadMessageBlock(TArray<uint8> data, uint32 idx) {
+	int LoadMessageBlock(TArray<uint8> data, uint32 idx) {
 		
 		uint32 len = data[idx];
 		messageData = "";
@@ -17,7 +17,7 @@ struct FPlatformMessageBlock
 			int readIdx = x + idx + 1;
 			messageData = messageData + data[readIdx];
 		}
-		
+		return len + 1;
 	};
 	TArray<uint8> WriteMessageBlockData(TArray<uint8> data) {
 		uint8 len1 = (messageData.Len() & 0xff000000UL) >> 24;
@@ -34,7 +34,7 @@ struct FPlatformMessageBlock
 		len.Insert(len3, 2);
 		len.Insert(len4, 3);
 		data.Append(len);
-		data.Append(messageData.GetCharArray());
+		data.Append((uint8*)TCHAR_TO_UTF8(messageData.GetCharArray().GetData()), messageData.Len());
 		return data;
 	};
 	
@@ -55,9 +55,13 @@ public:
 	void LoadMessageData(TArray<uint8> data) {
 		messageHeader = data.GetData()[0];
 		int idx = 1;
-		FPlatformMessageBlock block;
-		block.LoadMessageBlock(data, idx);
-		messageBlocks.Add(block);
+		while (data.GetData()[idx] != 0)
+		{
+			FPlatformMessageBlock block;
+			idx += block.LoadMessageBlock(data, idx);
+			messageBlocks.Add(block);
+		}
+		
 		//if(data.GetData()[idx + block.messageData.Len() + 4] == 0)
 	}
 	TArray<uint8> GetMessageData() {
@@ -66,7 +70,7 @@ public:
 		for (int x = 0; x < messageBlocks.Num(); x++) {
 			data = messageBlocks[x].WriteMessageBlockData(data);
 		}
-		//data.Add(messageEnd);
+		data.Add(messageEnd);
 		return data;
 	}
 };
